@@ -726,7 +726,7 @@ def drawtext(text,x,y,size,b,g,r):
     labelframe3.configure(text="DRAW TEXT IMAGE")
     my_image_lable2.bind("<Button-1>", get_x_and_y)
     setCondition = 1
-
+    print("push thử")
 def draw_text2(text,x,y,size,b,g,r):
     global setCondition
     global saveImg
