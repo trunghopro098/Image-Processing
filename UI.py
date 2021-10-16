@@ -26,7 +26,7 @@ from tkinter import filedialog
 def Display(name):
     width = 368
     height = 470
-
+    print("22323")
     # You may prefer to use Image.thumbnail instead 368
     # Set use_resize to False to use Image.thumbnailv 480
     use_resize = True
