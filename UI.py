@@ -26,7 +26,7 @@ from tkinter import filedialog
 def Display(name):
     width = 368
     height = 470
-
+    print("22323")
     # You may prefer to use Image.thumbnail instead 368
     # Set use_resize to False to use Image.thumbnailv 480
     use_resize = True
@@ -727,7 +727,7 @@ def drawtext(text,x,y,size,b,g,r):
     labelframe3.configure(text="DRAW TEXT IMAGE")
     my_image_lable2.bind("<Button-1>", get_x_and_y)
     setCondition = 1
-
+    print("commit thử 1 lần ")
 def draw_text2(text,x,y,size,b,g,r):
     global setCondition
     global saveImg
