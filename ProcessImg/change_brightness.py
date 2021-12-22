@@ -3,7 +3,7 @@ import cv2
 import sys
 def change_brightness(img, alpha, beta):
     # a*f(x,y)+b
-    img_new = np.asarray(alpha*img + beta, dtype=int)   # cast pixel values to int
+    img_new = np.asarray(alpha*img + beta, dtype=int)   # dtype theo mặt định kiểu dử liệu đầu vào và áp dụng cho mảng kết quả. A nhập dử liệu theo bất hình thức nào
     img_new[img_new>255] = 255
     img_new[img_new<0] = 0
     # print(img_new)

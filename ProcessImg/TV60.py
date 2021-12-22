@@ -16,7 +16,6 @@ def tv_60(img,thresh,val):
 
         return gray
         # cv2.imshow('Original', img)
-
         # if cv2.waitKey(1) & 0xFF == ord('a'):
         #     return 0
     # cv2.destroyAllWindows()

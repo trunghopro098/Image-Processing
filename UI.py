@@ -21,14 +21,11 @@ import tkinter.ttk as CB
 import random
 from tkinter import filedialog
 
-
-
+pathNew = "./Images/editnew.png";
+#resize ảnh về kích thwcowcs cố định để hiển thị lên lable
 def Display(name):
     width = 368
     height = 470
-    print("22323")
-    # You may prefer to use Image.thumbnail instead 368
-    # Set use_resize to False to use Image.thumbnailv 480
     use_resize = True
     if use_resize:
         # Image.resize returns a new PIL.Image of the specified size
@@ -54,15 +51,16 @@ def Displaymini(name):
         PIL_image_small.thumbnail((width, height), Image.ANTIALIAS)
     return PIL_image_small
 
+#open file ảnh
 def openfileImabe():
     global my_image
     global filename
     global setCondition
     filename = filedialog.askopenfilename(initialdir=r"..\XULYANH\Image",title="Select A File",filetypes=(("png files","*.png"),("all files","*.*")))
     openImg = Image.open(filename)
-    my_image = ImageTk.PhotoImage(Display(openImg))
+    my_image = ImageTk.PhotoImage(Display(openImg))#đoc file ảnh và resize
     # my_image_lable = Label(labelframe2,image=my_image).pack()
-    my_image_lable.configure(image= my_image)
+    my_image_lable.configure(image= my_image)#hiển thị ảnh lên lable
     my_image_lable.image= my_image
     setCondition = 0
 # print(filename)
@@ -73,6 +71,9 @@ mask3x3 = np.ones((3, 3), dtype="float") * (1.0 / (3 * 3))
 mask5x5 = np.ones((5, 5), dtype="float") * (1.0 / (5 * 5))
 mask11X11 = np.ones((11, 11), dtype="float") * (1.0 / (11 * 11))
 mask21X21 = np.ones((21, 21), dtype="float") * (1.0 / (21 * 21))
+
+
+#tạo mặt nạ lọc theo kích thướt
 arrValue = [3,5,7,9,11,13,15,17,19,21]
 arrMASKVALUE = ["3x3","5x5","7X7","9X9","11X11","13X13","15X15","17X17","19X19","21X21"]
 def getvaluemass():
@@ -82,46 +83,42 @@ def getvaluemass():
         if (n == arrMASKVALUE[i]):
             q = i
     return q
+#chuyển ảnh xám
 
 def ImageGray():
-
         global saveImg
-        saveImg = ImageGrayProcess.ImageGray(filename)
-        imgGray = ImageTk.PhotoImage(Display(saveImg))
+        saveImg = ImageGrayProcess.ImageGray(filename)#trả về ảnh đã xử lý
+        imgGray = ImageTk.PhotoImage(Display(saveImg)) #resize ảnh và đọc ảnh để hiển thị
         my_image_lable2.configure(image=imgGray)
         my_image_lable2.image=imgGray
         labelframe3.configure(text="ẢNH XÁM")
 
-
+#Cân bằng histogram
 def HistogramBalance():
         global saveImg
         img1 = cv2.imread(filename,0)
-        hist = cv2.equalizeHist(img1)
+        hist = cv2.equalizeHist(img1)#cân bằng hist
         saveImg = Image.fromarray(hist)
         ingHist = ImageTk.PhotoImage(Display(saveImg))
         my_image_lable2.configure(image=ingHist)
         my_image_lable2.image=ingHist
         labelframe3.configure(text="CÂM BẰNG HISTOGRAM")
 
-
+#Phát hiện cạnh sử dụng canny
 def Candy(var):
     #ẩn my_image_lable2 và canvas
         my_image_lable2.place(x=6, y=20)
         global saveImg
-        img = cv2.imread(filename)
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        saveImg = cv2.Canny(gray, thresholdslider1.get(), thresholdslider2.get())
+        img = cv2.imread(filename)# đọc ảnh
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)#chuyển sang ảnh xám
+        saveImg = cv2.Canny(gray, thresholdslider1.get(), thresholdslider2.get())#dò cạnh
         Candy.img1 = Image.fromarray(saveImg)
         ingHist = ImageTk.PhotoImage(Display(Candy.img1))
         my_image_lable2.configure(image=ingHist)
         my_image_lable2.image=ingHist
         my_image_lable2.configure(text="ĐƯỜNG VIỀN")
         # my_image_lable2.bind("<Button-1>",get_x_and_y)
-
-
-# Phát hiện dò cạnh candy
-# độ sáng
-
+#kiểm tra ảnh đầu vào
 def check_Img():
     if(filename is None):
         messagebox.showinfo("Image processing", "please choose photo !")
@@ -133,8 +130,10 @@ def check_Img():
             messagebox.showinfo("Image processing", "please choose photo !")
             return False
 
+#thay đổi độ sáng tối của ảnh
 
-def Display_Change_brightness(var):
+def Display_Change_brightness(var):#sử dụg slider nên ta truyền tham số ảo
+
         my_image_lable2.place(x=6, y=20)
         global saveImg
         img = cv2.imread(filename)
@@ -150,9 +149,9 @@ def Display_Change_brightness(var):
 
 
 
+
 #làm mờ 4 góc của ảnh
 def Vignette1(var):
-
         my_image_lable2.place(x=6, y=20)
         global saveImg
         saveImg = Vignette.blur(filename,slider_Y.get(),slider_X.get())
@@ -164,10 +163,10 @@ def Vignette1(var):
         my_image_lable2.image = newImg
         labelframe3.configure(text="LÀM MỜ 4 GÓC")
         print("đã lưu")
+#tạo prj làm việc mới
 def New():
     global saveImg
     global filename
-
     setCondition = 0
     filename = None
     openImg_new = Image.open(r"./Images/black.png")
@@ -180,9 +179,10 @@ def New():
     labelframe3.configure(text="NEW")
     lable_anh1.configure(image=newImg1)
 
-
+#save ảnh
 def save_Img():
     try:
+        #lấy thời gian hiện tại khi lưu ảnh sẽ không bị trùng tên ảnh
         today = date.today()
         print("Ngay hien tai:", today)
         val = random.randint(1, 10000)
@@ -193,11 +193,12 @@ def save_Img():
         if (saveImg is None):
             messagebox.showinfo("Image Processing", "Please process before saving !")
         else:
+            # cú pháp tên ảnh khi lưu yyyy-mm-dd_H_M_S.png
             cv2.imwrite(r"./ProcessedImage/" + str(today) + "_" + str(current_time) + "_new_img.png", saveImg)
             messagebox.showinfo("Image Processing", "saved !")
     except(NameError):
         messagebox.showinfo("Image Processing", "Please process before saving !")
-
+#Save as
 def save_as():
     try:
         if(saveImg is None):
@@ -226,13 +227,12 @@ def opemImage2():
 
 #ghép 2 ảnh
 def addweightedImag(var):
-
     my_image_lable2.place(x=6, y=20)
     global saveImg
     try:
         img = cv2.imread(filename)
         img2 = cv2.imread(filename2)
-        saveImg = addweighted_image.add(img,slider_apha1.get(),img2,slider_beta.get(),slider_gamma.get())
+        saveImg = addweighted_image.add(img,slider_apha1.get(),img2,slider_beta.get(),slider_gamma.get())#dst=α⋅src1+β⋅src2+γ
         # if (r"C:\Users\Administrator\PycharmProjects\XULYANH\Images\new_img.png"):
         os.remove(r".\Images\new_img.png")
         cv2.imwrite(r".\Images\new_img.png", saveImg)
@@ -246,12 +246,12 @@ def addweightedImag(var):
 
 #Chuyển đổi các hệ màu
 def GRB2GRB(var):
-
-    my_image_lable2.place(x=6, y=20)
     global saveImg
+    my_image_lable2.place(x=6, y=20)
     saveImg = RGB_Image.GRB(filename,slider_RED.get(),slider_GREEN.get(),slider_BLU.get())
     os.remove(r".\Images\new_img.png")
-    saveImg = saveImg.save(r".\Images\new_img.png")
+    saveImg.save(r".\Images\new_img.png")
+    saveImg = cv2.imread(r".\Images\new_img.png")#đọc ảnh bằng thư viện cv2 cho biến global saveImg để thực hiện save as
     # saveImg.show()
     openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
@@ -259,6 +259,8 @@ def GRB2GRB(var):
     my_image_lable2.image = newImg
     labelframe3.configure(text="GRB")
 path = "./Images/tre.png"
+
+#làm nhiểu ảnh
 def TV_60(var):
 
     my_image_lable2.place(x=6, y=20)
@@ -293,7 +295,6 @@ def Sepia_Img():
 
 #làm mờ background
 def ROI_Img(var):
-
     my_image_lable2.place(x=6, y=20)
     global saveImg
     global imCrop
@@ -330,7 +331,7 @@ def ROI_Img(var):
             cv2.imwrite(r".\Images\new_roi.png", imCrop)
         else:
             cv2.imwrite(r".\Images\new_roi.png", imCrop)
-
+        #Hiển thị ảnh đã cắt lên giao diện
         openImg = Image.open(path)
         image3 = ImageTk.PhotoImage(Displaymini(openImg))
         label_fr_object.configure(text="OBJECT")
@@ -361,6 +362,7 @@ def ROI_Img(var):
         # img[ytopL:yBottomR, XtopL:XBottomR] = imCrop
     except(NameError):
         print(NameError)
+
 # hiển thị selectROI và trả về vị trí tọa độ
 def roi_x_y():
     global roi
@@ -388,7 +390,7 @@ def ROI_Img_process():
     if cv2.waitKey(1) & 0xFF == ord('q'):
         return 0
 
-#làm mờ nền
+
 def getvaluecombbox():
     n = combb1.get()
     q = 0
@@ -396,6 +398,7 @@ def getvaluecombbox():
         if (n == arrMASKVALUE[i]):
             q = i
     return q
+
 #làm mịn
 def Gaussian_smooothing(var):
 
@@ -421,7 +424,7 @@ def Gaussian_smooothing(var):
 
 
 def Bilaterai(var):
-
+#https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html
     my_image_lable2.place(x=6, y=20)
     global saveImg
     saveImg = cv2.imread(filename)  # đọc ảnh
@@ -518,6 +521,7 @@ def Laplacia_smoothing():
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
     labelframe3.configure(text="LAPLACIA")
+
 def Sketch_smoothing(var):
 
     my_image_lable2.place(x=6, y=20)
@@ -538,6 +542,8 @@ def Sketch_smoothing(var):
     my_image_lable2.image = newImg
     labelframe3.configure(text="LAPLACIA")
 
+
+# ẩn frame
 def hide_all_framupgrade():
     labelframeSmothing.place_forget()
     labelframeNoise.place_forget()
@@ -561,6 +567,7 @@ def Noise1():
     R66.place(x=230, y=65)
 
 #phần con của smoothing và detect edges
+# ẩn fram
 def hide_fr():
     labelframeGaussian.place_forget()
     labelframeBilateral.place_forget()
@@ -569,7 +576,6 @@ def hide_fr():
     labelframeGradient.place_forget()
     labelframeSobel.place_forget()
     labelframeLaplacia.place_forget()
-
 def gaussian():
     hide_fr()
     labelframeGaussian.place(x= 1, y= 230)
@@ -728,6 +734,7 @@ def drawtext(text,x,y,size,b,g,r):
     my_image_lable2.bind("<Button-1>", get_x_and_y)
     setCondition = 1
     print("commit thử 1 lần ")
+
 def draw_text2(text,x,y,size,b,g,r):
     global setCondition
     global saveImg
@@ -807,8 +814,6 @@ def Blur_background():
 
 
 
-def abc():
-    print("Abf")
 
 
 app = Tk()
@@ -854,6 +859,7 @@ Smoothing.add_separator()
 Graphcut = Menu(menubar,tearoff=0)
 menubar.add_cascade(label="Graphcut", menu=Graphcut)
 Graphcut.add_command(label="Collage",command=Pro_Collage_Img)
+Graphcut.add_separator()
 Graphcut.add_command(label="Blur Background",command=Blur_background)
 Graphcut.add_separator()
 
