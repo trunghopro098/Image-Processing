@@ -151,8 +151,6 @@ def Display_Change_brightness(var):#sử dụg slider nên ta truyền tham số
         labelframe3.configure(text="THAY ĐỔI ĐỘ SÁNG CỦA ẢNH")
 
 
-
-
 #làm mờ 4 góc của ảnh
 def Vignette1(var):
         my_image_lable2.place(x=6, y=20)
@@ -726,7 +724,20 @@ def drawtext(text,x,y,size,b,g,r):
     else:
         path_draw = "./Images/new_draw.png"
 
-    openImg_new = Image.open(path_draw)
+    print(path_draw)
+    img = cv2.imread(path_draw)
+    saveImg = draw.draw_text(img, text=text,
+                             x=x,
+                             y=y,
+                             size=size,
+                             color_bgr=[b, g, r],
+                             is_copy=False)
+    if (os.path.exists(path_draw)):
+        os.remove(r".\Images\new_draw.png")
+        cv2.imwrite(r".\Images\new_draw.png", saveImg)
+    else:
+        cv2.imwrite(r".\Images\new_draw.png", saveImg)
+    openImg_new = Image.open(r".\Images\new_draw.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
