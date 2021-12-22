@@ -136,6 +136,9 @@ def Display_Change_brightness(var):#sử dụg slider nên ta truyền tham số
 
         my_image_lable2.place(x=6, y=20)
         global saveImg
+        global path_brightness
+
+
         img = cv2.imread(filename)
         saveImg = change_brightness.change_brightness(img, slider_alpha.get(), slider_beta3.get())
         # if (r"C:\Users\Administrator\PycharmProjects\XULYANH\Images\new_img.png"):
@@ -246,6 +249,9 @@ def addweightedImag(var):
 
 #Chuyển đổi các hệ màu
 def GRB2GRB(var):
+
+    my_image_lable2.place(x=6, y=20)
+
     global saveImg
     my_image_lable2.place(x=6, y=20)
     saveImg = RGB_Image.GRB(filename,slider_RED.get(),slider_GREEN.get(),slider_BLU.get())
@@ -258,6 +264,7 @@ def GRB2GRB(var):
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
     labelframe3.configure(text="GRB")
+
 path = "./Images/tre.png"
 
 #làm nhiểu ảnh
@@ -431,6 +438,7 @@ def Bilaterai(var):
     saveImg = cv2.bilateralFilter(saveImg,slider_D.get(),slider_SimaColor.get(),slider_Space.get())
     pathgau_smoothing = "./Images/new_bilateral.png"
     if (os.path.exists(pathgau_smoothing)):
+        os.remove(r".\Images\new_bilateral.png")
         os.remove(r".\Images\new_bilateral.png")
         cv2.imwrite(r".\Images\new_bilateral.png", saveImg)
     else:
@@ -712,21 +720,13 @@ def drawtext(text,x,y,size,b,g,r):
     global setCondition
     global saveImg
     global path_draw
-    img = cv2.imread(filename)
-    saveImg = draw.draw_text(img, text=text,
-                             x=x,
-                             y=y,
-                             size=size,
-                             color_bgr=[b, g, r],
-                             is_copy=False)
-    path_draw = "./Images/new_draw.png"
-    if (os.path.exists(path_draw)):
-        os.remove(r".\Images\new_draw.png")
-        cv2.imwrite(r".\Images\new_draw.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_draw.png", saveImg)
 
-    openImg_new = Image.open(r".\Images\new_draw.png")
+    if (setCondition == 0):
+        path_draw = filename
+    else:
+        path_draw = "./Images/new_draw.png"
+
+    openImg_new = Image.open(path_draw)
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -734,33 +734,6 @@ def drawtext(text,x,y,size,b,g,r):
     my_image_lable2.bind("<Button-1>", get_x_and_y)
     setCondition = 1
     print("commit thử 1 lần ")
-
-def draw_text2(text,x,y,size,b,g,r):
-    global setCondition
-    global saveImg
-    global path_draw
-    img = cv2.imread(path_draw)
-    saveImg = draw.draw_text(img, text=text,
-                             x=x,
-                             y=y,
-                             size=size,
-                             color_bgr=[b, g, r],
-                             is_copy=False)
-    path_draw = "./Images/new_draw.png"
-    if (os.path.exists(path_draw)):
-        os.remove(r".\Images\new_draw.png")
-        cv2.imwrite(r".\Images\new_draw.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_draw.png", saveImg)
-
-    openImg_new = Image.open(r".\Images\new_draw.png")
-    newImg = ImageTk.PhotoImage(Display(openImg_new))
-    my_image_lable2.configure(image=newImg)
-    my_image_lable2.image = newImg
-    labelframe3.configure(text="DRAW TEXT IMAGE")
-    setCondition = 1
-
-    # vẽ trên canvas
 
 
 def get_x_and_y(event):
@@ -780,10 +753,8 @@ def process_draw():
     if(text == ''):
         messagebox.showinfo("Image Processing", "Input text !")
     else:
-        if(setCondition == 0):
-            drawtext(text,x,y,size,b,g,r)
-        else:
-            draw_text2(text,x,y,size,b,g,r)
+        drawtext(text,x,y,size,b,g,r)
+
 def DrawImg():
     hide_all_frame()
     labelframeDraw.pack(fill="both", expand=1)

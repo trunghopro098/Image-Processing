@@ -10,9 +10,9 @@ def tv_60(img,thresh,val):
             for j in range(width):
                 if np.random.randint(100) <= thresh:
                     if np.random.randint(2) == 0:
-                        gray[i, j] = min(gray[i, j] + np.random.randint(0, val+1), 255) # thêm nhiễu vào hình ảnh và các giá trị cài đặt> 255 đến 255.
+                        gray[i, j] = min(gray[i, j] + np.random.randint(0, val+1), 255) # thêm nhiễu vào hình ảnh và các giá trị cài đặt> 255 về 255.
                     else:
-                        gray[i, j] = max(gray[i, j] - np.random.randint(0, val+1), 0) # trừ nhiễu cho hình ảnh và cài đặt các giá trị <0 đến 0
+                        gray[i, j] = max(gray[i, j] - np.random.randint(0, val+1), 0) # trừ nhiễu cho hình ảnh và cài đặt các giá trị <0 về 0
 
         return gray
         # cv2.imshow('Original', img)
