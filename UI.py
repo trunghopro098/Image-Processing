@@ -55,6 +55,7 @@ def Displaymini(name):
 def openfileImabe():
     global my_image
     global filename
+    global name_main
     global setCondition
     filename = filedialog.askopenfilename(initialdir=r"..\XULYANH\Image",title="Select A File",filetypes=(("png files","*.png"),("all files","*.*")))
     openImg = Image.open(filename)
@@ -63,6 +64,7 @@ def openfileImabe():
     my_image_lable.configure(image= my_image)#hiển thị ảnh lên lable
     my_image_lable.image= my_image
     setCondition = 0
+    name_main=filename
 # print(filename)
 
 
@@ -84,6 +86,14 @@ def getvaluemass():
             q = i
     return q
 #chuyển ảnh xám
+
+def saveNewTmp(saveImg):
+    if (os.path.exists(r".\Images\new_img.png")):
+        os.remove(r".\Images\new_img.png")
+        cv2.imwrite(r".\Images\new_img.png", saveImg)
+    else:
+        cv2.imwrite(r".\Images\new_img.png", saveImg)
+
 
 def ImageGray():
         global saveImg
@@ -112,6 +122,7 @@ def Candy(var):
         img = cv2.imread(filename)# đọc ảnh
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)#chuyển sang ảnh xám
         saveImg = cv2.Canny(gray, thresholdslider1.get(), thresholdslider2.get())#dò cạnh
+        saveNewTmp(saveImg)
         Candy.img1 = Image.fromarray(saveImg)
         ingHist = ImageTk.PhotoImage(Display(Candy.img1))
         my_image_lable2.configure(image=ingHist)
@@ -142,8 +153,7 @@ def Display_Change_brightness(var):#sử dụg slider nên ta truyền tham số
         img = cv2.imread(filename)
         saveImg = change_brightness.change_brightness(img, slider_alpha.get(), slider_beta3.get())
         # if (r"C:\Users\Administrator\PycharmProjects\XULYANH\Images\new_img.png"):
-        os.remove(r".\Images\new_img.png")
-        cv2.imwrite(r".\Images\new_img.png", saveImg)
+        saveNewTmp(saveImg)
         openImg_new = Image.open(r"./Images/new_img.png")
         newImg = ImageTk.PhotoImage(Display(openImg_new))
         my_image_lable2.configure(image=newImg)
@@ -156,8 +166,7 @@ def Vignette1(var):
         my_image_lable2.place(x=6, y=20)
         global saveImg
         saveImg = Vignette.blur(filename,slider_Y.get(),slider_X.get())
-        os.remove(r".\Images\new_img.png")
-        cv2.imwrite(r".\Images\new_img.png", saveImg)
+        saveNewTmp(saveImg)
         openImg_new = Image.open(r"./Images/new_img.png")
         newImg = ImageTk.PhotoImage(Display(openImg_new))
         my_image_lable2.configure(image=newImg)
@@ -235,8 +244,7 @@ def addweightedImag(var):
         img2 = cv2.imread(filename2)
         saveImg = addweighted_image.add(img,slider_apha1.get(),img2,slider_beta.get(),slider_gamma.get())#dst=α⋅src1+β⋅src2+γ
         # if (r"C:\Users\Administrator\PycharmProjects\XULYANH\Images\new_img.png"):
-        os.remove(r".\Images\new_img.png")
-        cv2.imwrite(r".\Images\new_img.png", saveImg)
+        saveNewTmp(saveImg)
         openImg_new = Image.open(r"./Images/new_img.png")
         newImg = ImageTk.PhotoImage(Display(openImg_new))
         my_image_lable2.configure(image=newImg)
@@ -271,10 +279,9 @@ def TV_60(var):
     my_image_lable2.place(x=6, y=20)
     global saveImg
     saveImg = TV60.tv_60(filename,thresholdsliderTV60.get(),thresholdsValueTV60.get())
-    os.remove(r".\Images\new_img_tv.png")
-    cv2.imwrite(r".\Images\new_img_tv.png", saveImg)
+    saveNewTmp(saveImg)
     # saveImg.show()
-    openImg_new = Image.open(r".\Images\new_img_tv.png")
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -285,13 +292,8 @@ def Sepia_Img():
     my_image_lable2.place(x=6, y=20)
     global saveImg
     saveImg = Sepia.sepia(filename)
-    pathsepia = "./Images/sepia_new.png"
-    if (os.path.exists(pathsepia)):
-        os.remove(r".\Images\pathsepia.png")
-        cv2.imwrite(r".\Images\pathsepia.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\pathsepia.png", saveImg)
-    openImg_new = Image.open(r".\Images\pathsepia.png")
+    saveNewTmp(saveImg)
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -348,13 +350,8 @@ def ROI_Img(var):
         #gọp ảnh làm mờ
         saveImg[ytopL:yBottomR, XtopL:XBottomR] = imCrop
         #save ảnh
-        path1 = "./Images/new_blur.png"
-        if (os.path.exists(path1)):
-            os.remove(r".\Images\new_blur.png")
-            cv2.imwrite(r".\Images\new_blur.png", saveImg)
-        else:
-            cv2.imwrite(r".\Images\new_blur.png", saveImg)
-        openImg_new1 = Image.open(path1)#đọc ảnh và hiển thị lên tkinter
+        saveNewTmp(saveImg)
+        openImg_new1 = Image.open(r".\Images\new_img.png")#đọc ảnh và hiển thị lên tkinter
         newImg1 = ImageTk.PhotoImage(Display(openImg_new1))
         my_image_lable2.configure(image=newImg1)
         my_image_lable2.image = newImg1
@@ -415,13 +412,8 @@ def Gaussian_smooothing(var):
     saveImg = cv2.imread(filename)  # đọc ảnh
     saveImg = cv2.GaussianBlur(saveImg, ksize=(ksize,ksize), sigmaX=x, sigmaY=y)
 
-    pathgau_smoothing = ".\Images\new_gau.png"
-    if (os.path.exists(pathgau_smoothing)):
-        os.remove(r".\Images\new_gau.png")
-        cv2.imwrite(r".\Images\new_gau.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_gau.png", saveImg)
-    openImg_new = Image.open(r".\Images\new_gau.png")
+    saveNewTmp(saveImg)
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -434,14 +426,8 @@ def Bilaterai(var):
     global saveImg
     saveImg = cv2.imread(filename)  # đọc ảnh
     saveImg = cv2.bilateralFilter(saveImg,slider_D.get(),slider_SimaColor.get(),slider_Space.get())
-    pathgau_smoothing = "./Images/new_bilateral.png"
-    if (os.path.exists(pathgau_smoothing)):
-        os.remove(r".\Images\new_bilateral.png")
-        os.remove(r".\Images\new_bilateral.png")
-        cv2.imwrite(r".\Images\new_bilateral.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_bilateral.png", saveImg)
-    openImg_new = Image.open(r".\Images\new_bilateral.png")
+    saveNewTmp(saveImg)
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -456,13 +442,8 @@ def Mean_smoothing():
     kernel = np.ones((x,x),np.float32)/(x*x)
     saveImg = cv2.filter2D(saveImg, -1, kernel)
 
-    pathgau_smoothing = "./Images/new_Mean.png"
-    if (os.path.exists(pathgau_smoothing)):
-        os.remove(r".\Images\new_Mean.png")
-        cv2.imwrite(r".\Images\new_Mean.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_Mean.png", saveImg)
-    openImg_new = Image.open(r".\Images\new_Mean.png")
+    saveNewTmp(saveImg)
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -476,13 +457,8 @@ def Median_smoothing():
     saveImg = cv2.imread(filename)  # đọc ảnh
     saveImg = cv2.medianBlur(saveImg,x)
 
-    pathgau_smoothing = "./Images/new_Median.png"
-    if (os.path.exists(pathgau_smoothing)):
-        os.remove(r".\Images\new_Median.png")
-        cv2.imwrite(r".\Images\new_Median.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_Median.png", saveImg)
-    openImg_new = Image.open(r".\Images\new_Median.png")
+    saveNewTmp(saveImg)
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -499,13 +475,8 @@ def Sobel_smoothing():
     Edge_y = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
     saveImg = np.sqrt(Edge_x ** 2 + Edge_y ** 2)
 
-    pathgau_smoothing = "./Images/new_Sobel.png"
-    if (os.path.exists(pathgau_smoothing)):
-        os.remove(r".\Images\new_Sobel.png")
-        cv2.imwrite(r".\Images\new_Sobel.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_Sobel.png", saveImg)
-    openImg_new = Image.open(r".\Images\new_Sobel.png")
+    saveNewTmp(saveImg)
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -516,13 +487,8 @@ def Laplacia_smoothing():
     global saveImg
     img = cv2.imread(filename)  # đọc ảnh
     saveImg = cv2.Laplacian(img,cv2.CV_64F)
-    pathgau_smoothing = "./Images/new_Laplacia.png"
-    if (os.path.exists(pathgau_smoothing)):
-        os.remove(r".\Images\new_Laplacia.png")
-        cv2.imwrite(r".\Images\new_Laplacia.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_Laplacia.png", saveImg)
-    openImg_new = Image.open(r".\Images\new_Laplacia.png")
+    saveNewTmp(saveImg)
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -536,13 +502,8 @@ def Sketch_smoothing(var):
     img = cv2.imread(filename)  # đọc ảnh
     blurr = cv2.GaussianBlur(img, (ksize, ksize), 0)#làm mờ
     saveImg = cv2.divide(img, blurr, scale=slider_Scale.get())#làm nổi bật cạnh của hình
-    pathgau_smoothing = "./Images/new_Laplacia.png"
-    if (os.path.exists(pathgau_smoothing)):
-        os.remove(r".\Images\new_Laplacia.png")
-        cv2.imwrite(r".\Images\new_Laplacia.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_Laplacia.png", saveImg)
-    openImg_new = Image.open(r".\Images\new_Laplacia.png")
+    saveNewTmp(saveImg)
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -715,29 +676,17 @@ def Pro_Collage_Img():
 
 #vẽ text lên ảnh
 def drawtext(text,x,y,size,b,g,r):
-    global setCondition
     global saveImg
-    global path_draw
 
-    if (setCondition == 0):
-        path_draw = filename
-    else:
-        path_draw = "./Images/new_draw.png"
-
-    print(path_draw)
-    img = cv2.imread(path_draw)
+    img = cv2.imread(filename)
     saveImg = draw.draw_text(img, text=text,
                              x=x,
                              y=y,
                              size=size,
                              color_bgr=[b, g, r],
                              is_copy=False)
-    if (os.path.exists(path_draw)):
-        os.remove(r".\Images\new_draw.png")
-        cv2.imwrite(r".\Images\new_draw.png", saveImg)
-    else:
-        cv2.imwrite(r".\Images\new_draw.png", saveImg)
-    openImg_new = Image.open(r".\Images\new_draw.png")
+    saveNewTmp(saveImg)
+    openImg_new = Image.open(r".\Images\new_img.png")
     newImg = ImageTk.PhotoImage(Display(openImg_new))
     my_image_lable2.configure(image=newImg)
     my_image_lable2.image = newImg
@@ -793,9 +742,25 @@ def Blur_background():
     if(check_Img()):
         hide_all_frame()
         labelframeBlurbackgruond.pack(fill="both", expand=1)
+def Apply():
+    global  filename
+    messagebox.showinfo("Image Processing", "Apply success !")
+    img = cv2.imread(r".\Images\new_img.png")
+    if (os.path.exists(r".\Images\img_tmp.png")):
+        os.remove(r".\Images\img_tmp.png")
+        cv2.imwrite(r".\Images\img_tmp.png", img)
+    else:
+        cv2.imwrite(r".\Images\img_tmp.png", img)
+    filename = r".\Images\img_tmp.png"
 
-
-
+def Reset_Image():
+    global filename
+    messagebox.showinfo("Image Processing", "Reset success !")
+    filename=name_main
+    openImg_new = Image.open(filename)
+    newImg = ImageTk.PhotoImage(Display(openImg_new))
+    my_image_lable2.configure(image=newImg)
+    my_image_lable2.image = newImg
 
 
 app = Tk()
@@ -914,6 +879,10 @@ thresholdsValueTV60 = Scale(labelframe_gray,from_= 0,to=255, length = 230,resolu
 thresholdsValueTV60.set(80)
 # thresholdslider2.place(x= 95, y = 175)
 
+btn_apply =Button(labelframe_gray,text= "Apply",command=Apply,width =14,bg ="red",fg = "white",font="Time 8 bold")
+btn_apply.place(x=40,y=400)
+reset =Button(labelframe_gray,text= "Reset",command=Reset_Image,width =14,bg ="green",fg = "white",font="Time 8 bold")
+reset.place(x=185,y=400)
 
 #Cân bằng độ sáng
 labelframeCHANGEBRIGTHNESS=LabelFrame(frame,text="BRIGTHNESS",fg = 'red',font= "Time 8 bold",width=344,
@@ -959,6 +928,10 @@ labB = Label(labelframeCHANGEBRIGTHNESS,text="BLUE : ",fg= "red",font= "Time 8 b
 slider_BLU = Scale(labelframeCHANGEBRIGTHNESS,from_= 0,to=255, length = 250,resolution=5, command=GRB2GRB,orient = HORIZONTAL,activebackground="yellow",troughcolor="blue")
 slider_BLU.set(100)
 
+btn_apply1 =Button(labelframeCHANGEBRIGTHNESS,text= "Apply",command=Apply,width =14,bg ="red",fg = "white",font="Time 8 bold")
+btn_apply1.place(x=40,y=380)
+reset1 =Button(labelframeCHANGEBRIGTHNESS,text= "Reset",command=Reset_Image,width =14,bg ="green",fg = "white",font="Time 8 bold")
+reset1.place(x=185,y=380)
 #frame ghép ảnh
 labelframeCollage=LabelFrame(frame,text="COLLAGE",fg = 'red',font= "Time 8 bold",width=344,
              height=506,highlightcolor="yellow",
@@ -970,8 +943,8 @@ label_fr_anhgoc_1=LabelFrame(labelframeCollage,text="ẢNH THỨ HAI",fg = '#F79
 label_fr_anhgoc_1.place(x = 60, y = 5)
 
 
-btna2 =Button(labelframeCollage,text= "Choose image",command= opemImage2,width =16,bg ="black",fg = "white",font="Time 8 bold")
-btna2.place(x=120,y=310)
+btna2 =Button(labelframeCollage,text= "Choose image",command= opemImage2,width =12,bg ="black",fg = "white",font="Time 8 bold")
+btna2.place(x=20,y=310)
 
 lable_anh12 = Label(label_fr_anhgoc_1,bg="black")
 lable_anh12.place(x=6,y=0)
@@ -992,6 +965,10 @@ labgamma = Label(labelframeCollage,text=" gamma : ",fg= "red",font= "Time 8 bold
 slider_gamma = Scale(labelframeCollage,from_= 0,to=1, length = 260,resolution=0.1,command=addweightedImag,orient = HORIZONTAL,activebackground="yellow",troughcolor="black")
 slider_gamma.set(0)
 # slider_gamma.place(x= 60, y = 425)
+btn_apply3 =Button(labelframeCollage,text= "Apply",command=Apply,width =12,bg ="red",fg = "white",font="Time 8 bold")
+btn_apply3.place(x=130,y=310)
+reset3 =Button(labelframeCollage,text= "Reset",command=Reset_Image,width =12,bg ="green",fg = "white",font="Time 8 bold")
+reset3.place(x=240,y=310)
 
 #Làm ghép ảnh làm mờ gausian
 labelframeBlurbackgruond =LabelFrame(frame,text="BLUR BACKGROUND",fg = 'red',font= "Time 8 bold",width=344,
@@ -1027,7 +1004,10 @@ sigmaY = Label(labelframeBlurbackgruond,text=" SIGMAY : ",fg= "red",font= "Time 
 slider_sigmaY = Scale(labelframeBlurbackgruond,from_= 0,to=20, command=ROI_Img,length = 240,resolution=1,orient = HORIZONTAL,activebackground="yellow",troughcolor="black")
 slider_sigmaY.set(4)
 
-
+btn_apply4 =Button(labelframeBlurbackgruond,text= "Apply",command=Apply,width =14,bg ="red",fg = "white",font="Time 8 bold")
+btn_apply4.place(x=40,y=450)
+reset4 =Button(labelframeBlurbackgruond,text= "Reset",command=Reset_Image,width =14,bg ="green",fg = "white",font="Time 8 bold")
+reset4.place(x=185,y=450)
 
 # làm mịn ảnh
 labelframeIMAGESMOOTHING=LabelFrame(frame,text="UPGRADE",fg = 'red',font= "Time 8 bold",width=348,
@@ -1050,7 +1030,7 @@ slider_sigmay = Scale(labelframeIMAGESMOOTHING,from_= 0,to=10, length = 230,reso
 #https://aicurious.io/posts/2018-09-29-loc-anh-image-filtering/
 #https://www.stdio.vn/computer-vision/xu-ly-anh-voi-opencv-loc-so-trong-anh-kjcgL1
 labelframeGaussian=LabelFrame(labelframeIMAGESMOOTHING,text="GAUSSIAN",fg = 'red',font= "Time 8 bold",width=340,
-             height=250,highlightcolor="yellow",
+             height=160,highlightcolor="yellow",
              highlightbackground="red")
 labelframeSmothing=LabelFrame(labelframeIMAGESMOOTHING,text="SMOOTHING",fg = 'red',font= "Time 8 bold",width=340,
              height=140,highlightcolor="yellow",
@@ -1060,6 +1040,10 @@ value=IntVar()
 R_Smoothing = Radiobutton(labelframeIMAGESMOOTHING,command= smoothing, text="SMOOTHING",variable=value,activeforeground="red",highlightcolor="red",selectcolor="white",value=1,fg= "red",font= "Time 9 bold")
 R_Noise = Radiobutton(labelframeIMAGESMOOTHING, text="DETECT EDGES",command=Noise1,variable=value,activeforeground="red",highlightcolor="red",selectcolor="white",value=2, fg= "red",font= "Time 9 bold")
 
+btn_apply2 =Button(labelframeIMAGESMOOTHING,text= "Apply",command=Apply,width =14,bg ="red",fg = "white",font="Time 8 bold")
+btn_apply2.place(x=40,y=430)
+reset2 =Button(labelframeIMAGESMOOTHING,text= "Reset",command=Reset_Image,width =14,bg ="green",fg = "white",font="Time 8 bold")
+reset2.place(x=185,y=430)
 
 var = IntVar()
 R1 = Radiobutton(labelframeSmothing, text="GAUSSIAN",command=gaussian,variable=var,activeforeground="red",highlightcolor="red",selectcolor="yellow",value=1, font="Time 8 bold",fg= "blue" )
@@ -1099,7 +1083,7 @@ R66 = Radiobutton(labelframeNoise, text="Nonfunction", variable=var1,activeforeg
 
 # bilateral
 labelframeBilateral=LabelFrame(labelframeIMAGESMOOTHING,text="BILATERAL",fg = 'red',font= "Time 8 bold",width=340,
-             height=250,highlightcolor="yellow",
+             height=180,highlightcolor="yellow",
              highlightbackground="red")
 labSD = Label(labelframeBilateral,text="Diameter : ",fg= "#5FD496",font= "Time 9 bold")
 slider_D = Scale(labelframeBilateral,from_= 0,to=30, length = 220,resolution=1,command=Bilaterai,activebackground="yellow",orient = HORIZONTAL)
@@ -1112,15 +1096,15 @@ slider_Space = Scale(labelframeBilateral,from_= 0,to=100, length = 220,resolutio
 slider_Space.set(75)
 #mean
 labelframeMean=LabelFrame(labelframeIMAGESMOOTHING,text="MEAM",fg = 'red',font= "Time 8 bold",width=340,
-             height=250,highlightcolor="yellow",
+             height=180,highlightcolor="yellow",
              highlightbackground="red")
 #MEDIAN
 labelframeMedian=LabelFrame(labelframeIMAGESMOOTHING,text="MEDIAM",fg = 'red',font= "Time 8 bold",width=340,
-             height=250,highlightcolor="yellow",
+             height=180,highlightcolor="yellow",
              highlightbackground="red")
 #MEDIAN
 labelframeGradient=LabelFrame(labelframeIMAGESMOOTHING,text="SKETCH",fg = 'red',font= "Time 8 bold",width=340,
-             height=250,highlightcolor="yellow",
+             height=180,highlightcolor="yellow",
              highlightbackground="red")
 labScale = Label(labelframeGradient,text="Scale :",fg= "red",font= "Time 9 bold")
 slider_Scale = Scale(labelframeGradient,from_= 0,to=255, length = 220,resolution=10,command=Sketch_smoothing,activebackground="red",orient = HORIZONTAL)
@@ -1131,11 +1115,11 @@ slider_Scale.set(230)
 
 #MEDIAN
 labelframeSobel=LabelFrame(labelframeIMAGESMOOTHING,text="SOBEL",fg = 'red',font= "Time 8 bold",width=340,
-             height=250,highlightcolor="yellow",
+             height=180,highlightcolor="yellow",
              highlightbackground="red")
 #MEDIAN
 labelframeLaplacia=LabelFrame(labelframeIMAGESMOOTHING,text="LAPLACIA",fg = 'red',font= "Time 8 bold",width=340,
-             height=250,highlightcolor="yellow",
+             height=180,highlightcolor="yellow",
              highlightbackground="red")
 
 #
@@ -1186,6 +1170,10 @@ labtextsizepen = Label(labelframeDraw,text=" SIZE PEN : ",fg= "red",font= "Time 
 slider_textsizepen = Scale(labelframeDraw,from_= 0,to=1, length = 210,resolution=0.05, orient = HORIZONTAL,activebackground="yellow",troughcolor="blue")
 slider_textsizepen.set(0.05)
 
+btn_apply5 =Button(labelframeDraw,text= "Apply",command=Apply,width =14,bg ="red",fg = "white",font="Time 8 bold")
+btn_apply5.place(x=40,y=450)
+reset5 =Button(labelframeDraw,text= "Reset",command=Reset_Image,width =14,bg ="green",fg = "white",font="Time 8 bold")
+reset5.place(x=185,y=450)
 # btnHistogram.place(x=200,y=50)
 # canvas.bind("<Button-1>", get_x_and_y)
 # canvas.bind("<B1-Motion>", draw_smth)

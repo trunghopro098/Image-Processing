@@ -19,3 +19,5 @@ def blur(nameImg,cl,rw):
     # cv2.imshow('image', output)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
+
+
